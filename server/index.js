@@ -15,7 +15,12 @@ const app = express();
 
 dotenv.config();
 
-app.use(cors());
+// CORS configuration - supports both production and development
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
+app.use(cors({
+  origin: FRONTEND_URL,
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -34,7 +39,7 @@ const server = app.listen(PORT, () => {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: FRONTEND_URL,
     credentials: true,
   },
 });
@@ -53,7 +58,7 @@ io.on("connection", (socket) => {
   global.chatSocket = socket;
   // Store user ID from socket auth
   const userId = socket.user?.uid || socket.handshake.auth?.uid;
-  
+
   socket.on("addUser", (userId) => {
     onlineUsers.set(userId, socket.id);
     socket.emit("getUsers", Array.from(onlineUsers));
