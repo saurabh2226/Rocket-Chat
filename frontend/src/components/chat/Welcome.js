@@ -23,12 +23,12 @@ export default function Welcome({ users, currentUser, onlineUsersId, setChatRoom
 
     const filtered = users.filter((user) => {
       if (user.uid === currentUser?.uid) return false;
-      
+
       const query = searchQuery.toLowerCase();
       const displayName = user.displayName?.toLowerCase() || "";
       const email = user.email?.toLowerCase() || "";
       const username = user.username?.toLowerCase() || "";
-      
+
       // Search by display name, email, and unique username
       return displayName.includes(query) || email.includes(query) || username.includes(query);
     });
@@ -54,7 +54,7 @@ export default function Welcome({ users, currentUser, onlineUsersId, setChatRoom
   };
 
   return (
-    <div className="lg:col-span-2 lg:block bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="lg:col-span-2 lg:block bg-gradient-to-br from-blue-50 via-white to-blue-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="flex flex-col items-center justify-center h-full px-6 py-12 min-h-[600px]">
         {/* Enhanced Welcome Section with Rocket Icon */}
         <div className="mb-8 transform hover:scale-105 transition-transform duration-300">
@@ -65,13 +65,13 @@ export default function Welcome({ users, currentUser, onlineUsersId, setChatRoom
             </div>
             {/* Decorative Circles */}
             <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-200 dark:bg-blue-900 rounded-full opacity-20 blur-xl"></div>
-            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-200 dark:bg-purple-900 rounded-full opacity-20 blur-xl"></div>
+            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-blue-300 dark:bg-blue-800 rounded-full opacity-20 blur-xl"></div>
           </div>
         </div>
 
         {/* Welcome Text with Gradient */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 bg-clip-text text-transparent">
             Welcome to Rocket Chat
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 mb-2">
@@ -127,7 +127,7 @@ export default function Welcome({ users, currentUser, onlineUsersId, setChatRoom
                   {filteredUsers.map((user, index) => (
                     <div
                       key={user.uid || index}
-                      className="flex items-center justify-between px-5 py-4 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-gray-700 dark:hover:to-gray-700 cursor-pointer transition-all duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0 group"
+                      className="flex items-center justify-between px-5 py-4 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-gray-700 dark:hover:to-gray-700 cursor-pointer transition-all duration-200 border-b border-gray-100 dark:border-gray-700 last:border-b-0 group"
                       onClick={() => handleStartChat(user)}
                     >
                       <div className="flex items-center flex-1 min-w-0">
@@ -135,7 +135,7 @@ export default function Welcome({ users, currentUser, onlineUsersId, setChatRoom
                       </div>
                       <div className="ml-4 flex-shrink-0">
                         <button
-                          className="flex items-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                          className="flex items-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleStartChat(user);
@@ -170,12 +170,12 @@ export default function Welcome({ users, currentUser, onlineUsersId, setChatRoom
               onClick={() => {
                 searchInputRef.current?.focus();
               }}
-              className="flex items-center px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              className="flex items-center px-8 py-4 text-base font-semibold text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               <SearchIcon className="h-5 w-5 mr-2" />
               Search & Start New Chat
             </button>
-            
+
             {/* Feature Highlights */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 max-w-2xl">
               <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg p-4 border border-gray-200 dark:border-gray-700">

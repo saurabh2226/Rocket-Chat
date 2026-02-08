@@ -102,7 +102,7 @@ export default function CreateGroupModal({ isOpen, onClose, onGroupCreated }) {
         <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onClick={handleClose}></div>
 
         <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4 flex items-center justify-between">
+          <div className="bg-gradient-to-r from-blue-500 to-blue-700 px-6 py-4 flex items-center justify-between">
             <h3 className="text-lg font-bold text-white">Create New Group</h3>
             <button
               onClick={handleClose}
@@ -114,7 +114,7 @@ export default function CreateGroupModal({ isOpen, onClose, onGroupCreated }) {
 
           <form onSubmit={handleSubmit} className="p-6">
             {error && (
-              <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 rounded">
+              <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900 border border-blue-400 dark:border-blue-700 text-blue-700 dark:text-blue-300 rounded">
                 {error}
               </div>
             )}
@@ -186,9 +186,8 @@ export default function CreateGroupModal({ isOpen, onClose, onGroupCreated }) {
                       <div
                         key={user.uid}
                         onClick={() => handleMemberToggle(user)}
-                        className={`p-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
-                          isSelected ? "bg-blue-50 dark:bg-blue-900/30" : ""
-                        }`}
+                        className={`p-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${isSelected ? "bg-blue-50 dark:bg-blue-900/30" : ""
+                          }`}
                       >
                         <div className="flex items-center justify-between">
                           <UserLayout user={user} />
@@ -214,7 +213,7 @@ export default function CreateGroupModal({ isOpen, onClose, onGroupCreated }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? "Creating..." : "Create Group"}
               </button>

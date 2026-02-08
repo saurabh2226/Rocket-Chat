@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { 
-  CogIcon, 
-  UserRemoveIcon, 
-  TrashIcon, 
+import {
+  CogIcon,
+  UserRemoveIcon,
+  TrashIcon,
   LogoutIcon,
-  BellIcon,
-  BellSlashIcon 
+  BellIcon
 } from "@heroicons/react/solid";
-import { 
-  updateGroup, 
-  removeGroupMember, 
-  leaveGroup, 
+import {
+  updateGroup,
+  removeGroupMember,
+  leaveGroup,
   deleteGroup,
-  updateGroupNotifications 
+  updateGroupNotifications
 } from "../../services/ChatService";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -47,7 +46,7 @@ export default function GroupManagement({ group, chatRoom, onUpdate, onClose }) 
 
   const handleRemoveMember = async (memberId) => {
     if (!window.confirm("Are you sure you want to remove this member?")) return;
-    
+
     try {
       await removeGroupMember(group._id, memberId);
       onUpdate();
@@ -58,7 +57,7 @@ export default function GroupManagement({ group, chatRoom, onUpdate, onClose }) 
 
   const handleLeaveGroup = async () => {
     if (!window.confirm("Are you sure you want to leave this group?")) return;
-    
+
     try {
       await leaveGroup(group._id);
       onClose();
@@ -69,7 +68,7 @@ export default function GroupManagement({ group, chatRoom, onUpdate, onClose }) 
 
   const handleDeleteGroup = async () => {
     if (!window.confirm("Are you sure you want to delete this group? This action cannot be undone.")) return;
-    
+
     try {
       await deleteGroup(group._id);
       onClose();
@@ -101,7 +100,7 @@ export default function GroupManagement({ group, chatRoom, onUpdate, onClose }) 
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 dark:bg-red-900 border border-red-400 text-red-700 dark:text-red-300 rounded">
+        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900 border border-blue-400 text-blue-700 dark:text-blue-300 rounded">
           {error}
         </div>
       )}
@@ -113,7 +112,7 @@ export default function GroupManagement({ group, chatRoom, onUpdate, onClose }) 
             {notifications ? (
               <BellIcon className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
             ) : (
-              <BellSlashIcon className="h-5 w-5 text-gray-400 mr-2" />
+              <BellIcon className="h-5 w-5 text-gray-400 mr-2" />
             )}
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white">Notifications</h3>
@@ -124,14 +123,12 @@ export default function GroupManagement({ group, chatRoom, onUpdate, onClose }) 
           </div>
           <button
             onClick={handleToggleNotifications}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              notifications ? "bg-blue-600" : "bg-gray-300 dark:bg-gray-600"
-            }`}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${notifications ? "bg-blue-600" : "bg-gray-300 dark:bg-gray-600"
+              }`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                notifications ? "translate-x-6" : "translate-x-1"
-              }`}
+              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${notifications ? "translate-x-6" : "translate-x-1"
+                }`}
             />
           </button>
         </div>
@@ -247,7 +244,7 @@ export default function GroupManagement({ group, chatRoom, onUpdate, onClose }) 
         {isAdmin ? (
           <button
             onClick={handleDeleteGroup}
-            className="w-full flex items-center justify-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <TrashIcon className="h-5 w-5 mr-2" />
             Delete Group
@@ -255,7 +252,7 @@ export default function GroupManagement({ group, chatRoom, onUpdate, onClose }) 
         ) : (
           <button
             onClick={handleLeaveGroup}
-            className="w-full flex items-center justify-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            className="w-full flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
           >
             <LogoutIcon className="h-5 w-5 mr-2" />
             Leave Group

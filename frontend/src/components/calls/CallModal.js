@@ -1,15 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { PhoneIcon, VideoCameraIcon, XIcon } from "@heroicons/react/solid";
 
-export default function CallModal({ 
-  isOpen, 
-  onClose, 
-  callType, 
-  callerName, 
-  onAccept, 
+export default function CallModal({
+  isOpen,
+  onClose,
+  callType,
+  callerName,
+  onAccept,
   onReject,
   localStream,
-  remoteStream 
+  remoteStream
 }) {
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
@@ -48,13 +48,13 @@ export default function CallModal({
             <div className="flex justify-center space-x-4">
               <button
                 onClick={onReject}
-                className="px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                className="px-6 py-3 bg-blue-400 text-white rounded-full hover:bg-blue-500 transition-colors"
               >
                 <XIcon className="h-6 w-6" />
               </button>
               <button
                 onClick={onAccept}
-                className="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition-colors"
+                className="px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
               >
                 {callType === "video" ? (
                   <VideoCameraIcon className="h-6 w-6" />
@@ -91,7 +91,7 @@ export default function CallModal({
             <div className="flex justify-center">
               <button
                 onClick={onClose}
-                className="px-6 py-3 bg-red-600 text-white rounded-full hover:bg-red-700 transition-colors"
+                className="px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
               >
                 <PhoneIcon className="h-6 w-6 rotate-135" />
               </button>

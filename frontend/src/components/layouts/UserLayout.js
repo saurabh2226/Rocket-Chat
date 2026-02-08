@@ -1,19 +1,19 @@
 export default function UserLayout({ user, onlineUsersId, showEmail = false }) {
   const isOnline = onlineUsersId?.includes(user?.uid);
-  
+
   return (
     <div className="relative flex items-center">
       <div className="relative">
-        <img 
-          className="w-10 h-10 rounded-full object-cover" 
-          src={user?.photoURL || `https://api.dicebear.com/9.x/avataaars/svg?seed=${user?.uid || 'default'}`} 
-          alt={user?.displayName || 'User'} 
+        <img
+          className="w-10 h-10 rounded-full object-cover"
+          src={user?.photoURL || `https://api.dicebear.com/9.x/avataaars/svg?seed=${user?.uid || 'default'}`}
+          alt={user?.displayName || 'User'}
           onError={(e) => {
             e.target.src = `https://api.dicebear.com/9.x/avataaars/svg?seed=${user?.uid || 'default'}`;
           }}
         />
         {isOnline ? (
-          <span className="absolute bottom-0 left-7 w-3.5 h-3.5 bg-green-500 dark:bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+          <span className="absolute bottom-0 left-7 w-3.5 h-3.5 bg-blue-500 dark:bg-blue-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
         ) : (
           <span className="absolute bottom-0 left-7 w-3.5 h-3.5 bg-gray-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
         )}
