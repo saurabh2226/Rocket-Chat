@@ -1,5 +1,5 @@
 # ---- Build stage ----
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 WORKDIR /app
 
@@ -13,13 +13,13 @@ RUN npm ci --only=production
 COPY server/ ./server/
 
 # ---- Production ----
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
 WORKDIR /app
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
-    adduser -S rocket -u 1001 -G nodejs
+  adduser -S rocket -u 1001 -G nodejs
 
 # Copy from build stage
 COPY --from=base --chown=rocket:nodejs /app /app
