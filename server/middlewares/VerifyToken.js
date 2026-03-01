@@ -1,4 +1,5 @@
 import auth from "../config/firebase-config.js";
+import logger from "../config/logger.js";
 
 export const VerifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -15,7 +16,9 @@ export const VerifyToken = async (req, res, next) => {
       req.user = decodeValue;
       return next();
     }
+    return res.status(401).json({ message: "Unauthorized: Invalid token" });
   } catch (e) {
+    logger.warn("Token verification failed", { error: e.message });
     return res.status(401).json({ message: "Unauthorized: Invalid token" });
   }
 };
@@ -32,10 +35,11 @@ export const VerifySocketToken = async (socket, next) => {
 
     if (decodeValue) {
       socket.user = decodeValue;
-
       return next();
     }
+    return next(new Error("Unauthorized: Invalid token"));
   } catch (e) {
+    logger.warn("Socket token verification failed", { error: e.message });
     return next(new Error("Unauthorized: Invalid token"));
   }
 };

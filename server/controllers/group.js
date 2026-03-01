@@ -1,15 +1,12 @@
 import Group from "../models/Group.js";
 import ChatRoom from "../models/ChatRoom.js";
+import logger from "../config/logger.js";
 
 // Create a new group
 export const createGroup = async (req, res) => {
   try {
     const { name, description, members, avatar, isPrivate } = req.body;
     const adminId = req.user.uid;
-
-    if (!name || name.trim() === "") {
-      return res.status(400).json({ error: "Group name is required" });
-    }
 
     // Create group members array with admin
     const groupMembers = [
@@ -46,7 +43,6 @@ export const createGroup = async (req, res) => {
 
     await chatRoom.save();
 
-    // Populate group data
     const populatedGroup = await Group.findById(group._id);
 
     res.status(201).json({
@@ -54,7 +50,7 @@ export const createGroup = async (req, res) => {
       chatRoom: chatRoom,
     });
   } catch (error) {
-    console.error("Error creating group:", error);
+    logger.error("Error creating group", { error: error.message });
     res.status(500).json({ error: "Failed to create group" });
   }
 };
@@ -70,7 +66,7 @@ export const getUserGroups = async (req, res) => {
 
     res.status(200).json(groups);
   } catch (error) {
-    console.error("Error fetching user groups:", error);
+    logger.error("Error fetching user groups", { error: error.message });
     res.status(500).json({ error: "Failed to fetch groups" });
   }
 };
@@ -95,7 +91,7 @@ export const getGroup = async (req, res) => {
 
     res.status(200).json(group);
   } catch (error) {
-    console.error("Error fetching group:", error);
+    logger.error("Error fetching group", { error: error.message });
     res.status(500).json({ error: "Failed to fetch group" });
   }
 };
@@ -113,7 +109,6 @@ export const updateGroup = async (req, res) => {
       return res.status(404).json({ error: "Group not found" });
     }
 
-    // Check if user is admin
     if (group.admin !== userId) {
       return res.status(403).json({ error: "Only admin can update group" });
     }
@@ -127,7 +122,7 @@ export const updateGroup = async (req, res) => {
 
     res.status(200).json(group);
   } catch (error) {
-    console.error("Error updating group:", error);
+    logger.error("Error updating group", { error: error.message });
     res.status(500).json({ error: "Failed to update group" });
   }
 };
@@ -139,22 +134,16 @@ export const addMembers = async (req, res) => {
     const userId = req.user.uid;
     const { memberIds } = req.body;
 
-    if (!memberIds || !Array.isArray(memberIds) || memberIds.length === 0) {
-      return res.status(400).json({ error: "Member IDs are required" });
-    }
-
     const group = await Group.findById(groupId);
 
     if (!group) {
       return res.status(404).json({ error: "Group not found" });
     }
 
-    // Check if user is admin
     if (group.admin !== userId) {
       return res.status(403).json({ error: "Only admin can add members" });
     }
 
-    // Add new members
     const existingMemberIds = group.members.map((m) => m.userId);
     const newMembers = memberIds
       .filter((id) => !existingMemberIds.includes(id))
@@ -177,7 +166,7 @@ export const addMembers = async (req, res) => {
 
     res.status(200).json(group);
   } catch (error) {
-    console.error("Error adding members:", error);
+    logger.error("Error adding members", { error: error.message });
     res.status(500).json({ error: "Failed to add members" });
   }
 };
@@ -194,19 +183,16 @@ export const removeMember = async (req, res) => {
       return res.status(404).json({ error: "Group not found" });
     }
 
-    // Check if user is admin or removing themselves
     if (group.admin !== userId && memberId !== userId) {
       return res.status(403).json({ error: "Permission denied" });
     }
 
-    // Cannot remove admin
     if (group.admin === memberId) {
       return res.status(400).json({ error: "Cannot remove group admin" });
     }
 
     group.members = group.members.filter((m) => m.userId !== memberId);
 
-    // Update chat room members
     const chatRoom = await ChatRoom.findOne({ groupId: group._id });
     if (chatRoom) {
       chatRoom.members = group.members.map((m) => m.userId);
@@ -217,7 +203,7 @@ export const removeMember = async (req, res) => {
 
     res.status(200).json(group);
   } catch (error) {
-    console.error("Error removing member:", error);
+    logger.error("Error removing member", { error: error.message });
     res.status(500).json({ error: "Failed to remove member" });
   }
 };
@@ -234,14 +220,12 @@ export const leaveGroup = async (req, res) => {
       return res.status(404).json({ error: "Group not found" });
     }
 
-    // Cannot leave if admin
     if (group.admin === userId) {
       return res.status(400).json({ error: "Admin cannot leave group. Transfer admin or delete group." });
     }
 
     group.members = group.members.filter((m) => m.userId !== userId);
 
-    // Update chat room members
     const chatRoom = await ChatRoom.findOne({ groupId: group._id });
     if (chatRoom) {
       chatRoom.members = group.members.map((m) => m.userId);
@@ -252,7 +236,7 @@ export const leaveGroup = async (req, res) => {
 
     res.status(200).json({ message: "Left group successfully" });
   } catch (error) {
-    console.error("Error leaving group:", error);
+    logger.error("Error leaving group", { error: error.message });
     res.status(500).json({ error: "Failed to leave group" });
   }
 };
@@ -269,20 +253,16 @@ export const deleteGroup = async (req, res) => {
       return res.status(404).json({ error: "Group not found" });
     }
 
-    // Check if user is admin
     if (group.admin !== userId) {
       return res.status(403).json({ error: "Only admin can delete group" });
     }
 
-    // Delete associated chat room
     await ChatRoom.deleteOne({ groupId: group._id });
-
-    // Delete group
     await Group.findByIdAndDelete(groupId);
 
     res.status(200).json({ message: "Group deleted successfully" });
   } catch (error) {
-    console.error("Error deleting group:", error);
+    logger.error("Error deleting group", { error: error.message });
     res.status(500).json({ error: "Failed to delete group" });
   }
 };
@@ -300,13 +280,11 @@ export const updateNotificationSettings = async (req, res) => {
       return res.status(404).json({ error: "Group not found" });
     }
 
-    // Check if user is a member
     const member = group.members.find((m) => m.userId === userId);
     if (!member) {
       return res.status(403).json({ error: "Not a member of this group" });
     }
 
-    // Update member's notification settings
     if (notifications !== undefined) {
       const memberIndex = group.members.findIndex((m) => m.userId === userId);
       if (memberIndex !== -1) {
@@ -318,7 +296,7 @@ export const updateNotificationSettings = async (req, res) => {
 
     res.status(200).json(group);
   } catch (error) {
-    console.error("Error updating notification settings:", error);
+    logger.error("Error updating notification settings", { error: error.message });
     res.status(500).json({ error: "Failed to update notification settings" });
   }
 };

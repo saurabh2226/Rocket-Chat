@@ -1,5 +1,9 @@
 import express from "express";
-
+import {
+  validateCreateRoom,
+  validateUserIdParam,
+  validateTwoUserParams,
+} from "../middlewares/validators.js";
 import {
   createChatRoom,
   getChatRoomOfUser,
@@ -8,8 +12,8 @@ import {
 
 const router = express.Router();
 
-router.post("/", createChatRoom);
-router.get("/:userId", getChatRoomOfUser);
-router.get("/:firstUserId/:secondUserId", getChatRoomOfUsers);
+router.post("/", validateCreateRoom, createChatRoom);
+router.get("/:userId", validateUserIdParam, getChatRoomOfUser);
+router.get("/:firstUserId/:secondUserId", validateTwoUserParams, getChatRoomOfUsers);
 
 export default router;

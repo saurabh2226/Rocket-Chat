@@ -4,21 +4,28 @@ services:
     name: rocket-chat-backend
     env: node
     region: oregon
+    plan: free
     buildCommand: npm install
     startCommand: npm start
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 8080
       - key: MONGO_URI
-        sync: false  # User will add this in Render dashboard
+        sync: false  # User will add in Render dashboard
       - key: FRONTEND_URL
-        sync: false  # User will add this in Render dashboard (e.g., https://your-frontend.onrender.com)
+        sync: false  # User will add in Render dashboard (e.g., https://your-frontend.onrender.com)
       - key: FIREBASE_SERVICE_ACCOUNT
-        sync: false  # User will add this in Render dashboard (JSON string)
-    healthCheckPath: /health
-    
+        sync: false  # User will add in Render dashboard (JSON string)
+      - key: REDIS_URL
+        sync: false  # Optional: add Redis URL for multi-instance scaling
+      - key: LOG_LEVEL
+        value: info
+      - key: MONGO_POOL_SIZE
+        value: 10
+
   # Frontend Static Site
   - type: static
     name: rocket-chat-frontend
@@ -28,9 +35,9 @@ services:
     staticPublishPath: ./frontend/build
     envVars:
       - key: REACT_APP_API_URL
-        sync: false  # User will add this in Render dashboard (e.g., https://your-backend.onrender.com)
+        sync: false  # User will add in Render dashboard (e.g., https://your-backend.onrender.com)
       - key: REACT_APP_SOCKET_URL
-        sync: false  # User will add this in Render dashboard (same as API_URL)
+        sync: false  # User will add in Render dashboard (same as API_URL)
       - key: REACT_APP_FIREBASE_API_KEY
         sync: false
       - key: REACT_APP_FIREBASE_AUTH_DOMAIN

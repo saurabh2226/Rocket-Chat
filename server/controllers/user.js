@@ -1,7 +1,8 @@
 import auth from "../config/firebase-config.js";
+import logger from "../config/logger.js";
 
 export const getAllUsers = async (req, res) => {
-  const maxResults = 1000; // Increased to show more registered users
+  const maxResults = 1000;
   let users = [];
 
   try {
@@ -14,7 +15,7 @@ export const getAllUsers = async (req, res) => {
     });
     res.status(200).json(users);
   } catch (error) {
-    console.log(error);
+    logger.error("Error fetching users", { error: error.message });
     res.status(500).json({ error: "Failed to fetch users" });
   }
 };
@@ -28,7 +29,7 @@ export const getUser = async (req, res) => {
 
     res.status(200).json({ uid, email, displayName, photoURL, username });
   } catch (error) {
-    console.log(error);
+    logger.error("Error fetching user", { error: error.message, userId: req.params.userId });
     res.status(500).json({ error: "Failed to fetch user" });
   }
 };
@@ -36,19 +37,7 @@ export const getUser = async (req, res) => {
 export const setUsername = async (req, res) => {
   try {
     const { username } = req.body;
-    const userId = req.user.uid; // From VerifyToken middleware
-
-    if (!username || username.trim() === "") {
-      return res.status(400).json({ error: "Username is required" });
-    }
-
-    // Validate username format
-    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
-    if (!usernameRegex.test(username)) {
-      return res.status(400).json({ 
-        error: "Username must be 3-20 characters, alphanumeric and underscores only" 
-      });
-    }
+    const userId = req.user.uid;
 
     // Check if username is already taken
     const allUsers = await auth.listUsers(1000);
@@ -63,12 +52,12 @@ export const setUsername = async (req, res) => {
       username: username.toLowerCase(),
     });
 
-    res.status(200).json({ 
-      message: "Username set successfully", 
-      username: username.toLowerCase() 
+    res.status(200).json({
+      message: "Username set successfully",
+      username: username.toLowerCase(),
     });
   } catch (error) {
-    console.error("Error setting username:", error);
+    logger.error("Error setting username", { error: error.message });
     res.status(500).json({ error: "Failed to set username" });
   }
 };

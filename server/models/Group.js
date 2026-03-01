@@ -6,17 +6,23 @@ const GroupSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 100,
     },
     description: {
       type: String,
       default: "",
+      maxlength: 500,
     },
     admin: {
       type: String,
       required: true,
+      index: true,
     },
     members: [{
-      userId: String,
+      userId: {
+        type: String,
+        required: true,
+      },
       role: {
         type: String,
         enum: ["admin", "member"],
@@ -48,6 +54,9 @@ const GroupSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Index for finding groups by member
+GroupSchema.index({ "members.userId": 1 });
 
 const Group = mongoose.model("Group", GroupSchema);
 
