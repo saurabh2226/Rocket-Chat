@@ -15,7 +15,9 @@ let serviceAccountKey;
 // Check if Firebase credentials are provided via environment variable (production)
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   try {
-    serviceAccountKey = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    serviceAccountKey = JSON.parse(
+      process.env.FIREBASE_SERVICE_ACCOUNT.replace(/\\n/g, "\n")
+    );
     console.log("Using Firebase credentials from environment variable");
   } catch (error) {
     console.error("Error parsing FIREBASE_SERVICE_ACCOUNT:", error);
@@ -29,7 +31,9 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT) {
     console.log("Using Firebase credentials from serviceAccountKey.json file");
   } catch (error) {
     console.error("Error reading serviceAccountKey.json:", error);
-    throw new Error("Firebase credentials not found. Set FIREBASE_SERVICE_ACCOUNT env var or add serviceAccountKey.json file");
+    throw new Error(
+      "Firebase credentials not found. Set FIREBASE_SERVICE_ACCOUNT env var or add serviceAccountKey.json file"
+    );
   }
 }
 

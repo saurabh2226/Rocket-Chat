@@ -3,7 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 
+// Load env vars BEFORE using them
+dotenv.config();
+
 import "./config/mongo.js";
+import ChatRoom from "./models/ChatRoom.js";
 
 import { VerifyToken, VerifySocketToken } from "./middlewares/VerifyToken.js";
 import chatRoomRoutes from "./routes/chatRoom.js";
@@ -13,16 +17,28 @@ import groupRoutes from "./routes/group.js";
 
 const app = express();
 
-dotenv.config();
-
 // CORS configuration - supports both production and development
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
+const allowedOrigins = FRONTEND_URL.split(",").map((url) => url.trim());
+
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, health checks)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Health check endpoint (BEFORE auth middleware so Render can reach it)
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
 
 app.use(VerifyToken);
 
@@ -39,7 +55,7 @@ const server = app.listen(PORT, () => {
 
 const io = new Server(server, {
   cors: {
-    origin: FRONTEND_URL,
+    origin: allowedOrigins,
     credentials: true,
   },
 });
@@ -67,7 +83,6 @@ io.on("connection", (socket) => {
   socket.on("sendMessage", ({ senderId, receiverId, message, chatRoomId, isGroup }) => {
     if (isGroup && chatRoomId) {
       // Broadcast to all group members
-      const ChatRoom = require("./models/ChatRoom.js").default;
       ChatRoom.findById(chatRoomId).then((room) => {
         if (room) {
           room.members.forEach((memberId) => {

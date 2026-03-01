@@ -17,7 +17,7 @@ services:
         sync: false  # User will add this in Render dashboard (e.g., https://your-frontend.onrender.com)
       - key: FIREBASE_SERVICE_ACCOUNT
         sync: false  # User will add this in Render dashboard (JSON string)
-    healthCheckPath: /api/user
+    healthCheckPath: /health
     
   # Frontend Static Site
   - type: static
