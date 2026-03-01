@@ -15,9 +15,17 @@ let serviceAccountKey;
 // Check if Firebase credentials are provided via environment variable (production)
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
   try {
-    serviceAccountKey = JSON.parse(
-      process.env.FIREBASE_SERVICE_ACCOUNT.replace(/\\n/g, "\n")
-    );
+    // Sanitize: replace actual newlines/tabs/carriage returns inside the JSON
+    // string with their escaped versions so JSON.parse doesn't choke on them.
+    // Then restore \\n inside the private_key value back to real newlines.
+    let raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+    raw = raw.replace(/\r?\n/g, "\\n").replace(/\t/g, "\\t");
+    serviceAccountKey = JSON.parse(raw);
+
+    // Ensure private_key has real newlines (some envs double-escape them)
+    if (serviceAccountKey.private_key) {
+      serviceAccountKey.private_key = serviceAccountKey.private_key.replace(/\\n/g, "\n");
+    }
     console.log("Using Firebase credentials from environment variable");
   } catch (error) {
     console.error("Error parsing FIREBASE_SERVICE_ACCOUNT:", error);
